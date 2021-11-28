@@ -25,7 +25,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     return google.sheets({ version: 'v4', auth: jwtClient });
   }
 
-  //MF
+  //MF打刻
   const mfPuppeteer = async () => {
     const browser = await puppeteer.launch(
       { headless: false, }//ブラウザ起動
