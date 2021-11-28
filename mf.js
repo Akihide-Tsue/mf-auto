@@ -3,6 +3,7 @@ require('dotenv').config();
 const { google } = require('googleapis');
 const puppeteer = require('puppeteer');
 const { setTimeout } = require("timers/promises");
+const { IncomingWebhook } = require("@slack/webhook");
 
 (async () => {
   //スプシ認証
@@ -46,10 +47,12 @@ const { setTimeout } = require("timers/promises");
     await setTimeout(2000)
 
     let buttonType = 'in'
-    //午後
+    let message = '出勤打刻'
+    //13時以降
     if (new Date().getHours() > 13) {
       console.log('退勤')
       buttonType = 'out'
+      message = '退勤打刻'
     }
     await setTimeout(2000)
     await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);//ダイアログ
@@ -59,8 +62,14 @@ const { setTimeout } = require("timers/promises");
     await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
     await setTimeout(2000)
     console.log('完了')
-    //LINE通知
 
+    //Slack通知
+    const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
+    webhook.send({
+      text: message,
+      username: "MF勤怠", //通知のユーザー名
+      icon_url: 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png',
+    });
     await browser.close();
   }
 
