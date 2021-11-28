@@ -33,8 +33,8 @@ const { IncomingWebhook } = require("@slack/webhook");
     const page = await browser.newPage();
     await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
     await setTimeout(2000)
-    console.log('ページ遷移')
     await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
+    console.log('ページ遷移')
     await setTimeout(2000)
     await page.type('input[name="mfid_user[email]"]', process.env.MF_ID);
     await page.click('input[type="submit"]');
@@ -66,7 +66,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     //Slack通知
     const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
     webhook.send({
-      text: message,
+      text: "<!channel>\n" + message,
       username: "MF勤怠", //通知のユーザー名
       icon_url: 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png',
     });
