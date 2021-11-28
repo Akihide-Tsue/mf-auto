@@ -1,8 +1,11 @@
 'use strict';
 require('dotenv').config();
 const { google } = require('googleapis');
+const puppeteer = require('puppeteer');
+const { setTimeout } = require("timers/promises");
 
 (async () => {
+  //スプシ認証
   const authorize = () => {
     const jwtClient = new google.auth.JWT(
       process.env.client_email,
@@ -21,15 +24,58 @@ const { google } = require('googleapis');
     return google.sheets({ version: 'v4', auth: jwtClient });
   }
 
+  //MF
+  const mfPuppeteer = async () => {
+    const browser = await puppeteer.launch(
+      { headless: false, }//ブラウザ起動
+    );
+    const page = await browser.newPage();
+    await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
+    await setTimeout(2000)
+    console.log('ページ遷移')
+    await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
+    await setTimeout(2000)
+    await page.type('input[name="mfid_user[email]"]', process.env.MF_ID);
+    await page.click('input[type="submit"]');
+    await setTimeout(2000)
+    console.log('パスワード画面')
+    await page.type('input[name="mfid_user[password]"]', process.env.MF_PASSWORD);
+    await setTimeout(2000)
+    await page.click('input[type="submit"]');
+    console.log('ログイン完了')
+    await setTimeout(2000)
+
+    let buttonType = 'in'
+    //午後
+    if (new Date().getHours() > 13) {
+      console.log('退勤')
+      buttonType = 'out'
+    }
+    await setTimeout(2000)
+    await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);//ダイアログ
+    await setTimeout(2000)
+    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
+    await setTimeout(2000)
+    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
+    await setTimeout(2000)
+    console.log('完了')
+    //LINE通知
+
+    await browser.close();
+  }
+
   try {
+    console.log('-----開始-----', new Date().getHours())
     const sheets = authorize();
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.SHEET_ID,
       range: 'A1',
     })
-    console.log('res', res.data.values[0])//スプシのA1
+    console.log('本日の勤務：', res.data.values[0])//スプシのA1
     if (res.data.values[0] == '出社' || res.data.values[0] == 'リモート') {
-      //TODO
+      mfPuppeteer()
+    } else {
+      console.log('今日は休日')
     }
   } catch (error) {
     console.log('The API returned an error: ' + error);
