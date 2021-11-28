@@ -11,5 +11,3 @@ utc12:30am = jtc9:30am
 https://www.youtube.com/watch?v=dFaV95gS_0M  
 https://note.com/pro_buncho/n/n0b13e7764c7b
 
-出社、リモート なら打刻
-LINE へ通知
