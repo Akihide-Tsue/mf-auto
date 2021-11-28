@@ -4,14 +4,7 @@
 
 node mf.js
 
-utc11:00pm = jtc8:00am  
-git add .  
-git commit -m "fix"  
-git push origin main
-
-### シート
-
-https://docs.google.com/spreadsheets/d/1viOwuf87zeCxToafzJ0ocow9l88A6I0Dt6lZKxTMaDU/edit#gid=0
+utc12:30am = jtc9:30am
 
 ### 参考
 
