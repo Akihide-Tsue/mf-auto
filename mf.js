@@ -28,7 +28,7 @@ const { IncomingWebhook } = require("@slack/webhook");
   //MF打刻
   const mfPuppeteer = async () => {
     const browser = await puppeteer.launch(
-      { headless: false, }//ブラウザ起動
+      // { headless: false, }//ブラウザ起動
     );
     const page = await browser.newPage();
     await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
