@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const { google } = require('googleapis');
+const _ = require('lodash')
 const puppeteer = require('puppeteer');
 const { setTimeout } = require("timers/promises");
 const { IncomingWebhook } = require("@slack/webhook");
@@ -8,21 +9,20 @@ const { IncomingWebhook } = require("@slack/webhook");
 (async () => {
   //スプシ認証
   const authorize = () => {
-    const jwtClient = new google.auth.JWT(
-      process.env.client_email,
-      null,
-      process.env.private_key,
-      ['https://www.googleapis.com/auth/spreadsheets']
-    );
-    jwtClient.authorize((err, tokens) => {
+    const email = process.env.client_email
+    const privateKey = _.replace(process.env.private_key, /\\n/g, '\n');
+    const scope = ['https://www.googleapis.com/auth/spreadsheets'];
+    const jsonWebToken = new google.auth.JWT(email, null, privateKey, scope, null);
+
+    jsonWebToken.authorize((err, tokens) => {
       if (err) {
         console.log(err);
         return;
       } else {
-        console.log('Authorize');
+        console.log('Authorized!');
       }
     });
-    return google.sheets({ version: 'v4', auth: jwtClient });
+    return google.sheets({ version: 'v4', auth: jsonWebToken });
   }
 
   //MF打刻
