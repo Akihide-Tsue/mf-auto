@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "16.11.1"
+  },
   "dependencies": {
     "@slack/webhook": "^6.0.0",
     "dotenv": "^10.0.0",
