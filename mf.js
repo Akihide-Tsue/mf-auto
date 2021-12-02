@@ -33,19 +33,19 @@ const { IncomingWebhook } = require("@slack/webhook");
     });
     const page = await browser.newPage();
     await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
-    await setTimeout(2000)
+    await setTimeout(20000)//20秒
     await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
     console.log('ページ遷移')
-    await setTimeout(2000)
+    await setTimeout(20000)
     await page.type('input[name="mfid_user[email]"]', process.env.MF_ID);
     await page.click('input[type="submit"]');
-    await setTimeout(2000)
+    await setTimeout(20000)
     console.log('パスワード画面')
     await page.type('input[name="mfid_user[password]"]', process.env.MF_PASSWORD);
-    await setTimeout(2000)
+    await setTimeout(20000)
     await page.click('input[type="submit"]');
     console.log('ログイン完了')
-    await setTimeout(2000)
+    await setTimeout(20000)
 
     let buttonType = 'in'
     let message = '出勤打刻'
@@ -55,13 +55,13 @@ const { IncomingWebhook } = require("@slack/webhook");
       buttonType = 'out'
       message = '退勤打刻'
     }
-    await setTimeout(2000)
+    await setTimeout(20000)
     await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);//ダイアログ
-    await setTimeout(2000)
+    await setTimeout(20000)
     await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
-    await setTimeout(2000)
+    await setTimeout(20000)
     await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
-    await setTimeout(2000)
+    await setTimeout(20000)
     console.log('完了')
 
     //Slack通知
