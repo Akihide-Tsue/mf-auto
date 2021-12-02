@@ -29,9 +29,12 @@ const { IncomingWebhook } = require("@slack/webhook");
   const mfPuppeteer = async () => {
     const browser = await puppeteer.launch({
       //  headless: false, //ブラウザ起動
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process']
     });
     const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36');
+    console.log('newPage OK')
     await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
     await setTimeout(20000)//20秒
     await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
