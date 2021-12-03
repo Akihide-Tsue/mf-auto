@@ -72,7 +72,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     webhook.send({
       text: "<!channel>\n" + message,
       username: "MF勤怠", //通知のユーザー名
-      icon_url: 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png',
+      icon_url: 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png',
     });
     await browser.close();
   }
