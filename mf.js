@@ -52,8 +52,8 @@ const { IncomingWebhook } = require("@slack/webhook");
 
     let buttonType = 'in'
     let message = '出勤打刻'
-    //13時以降
-    if (new Date().getHours() > 13) {
+    //UTC am9時以降
+    if (new Date().getHours() > 9) {
       console.log('退勤')
       buttonType = 'out'
       message = '退勤打刻'
