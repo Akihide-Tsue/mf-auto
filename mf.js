@@ -51,7 +51,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     await setTimeout(20000)
 
     let buttonType = 'in'
-    let message = '出勤打刻'
+    let message = new Date()+'出勤打刻'
     //UTC am9時以降
     if (new Date().getHours() > 9) {
       console.log('退勤')
