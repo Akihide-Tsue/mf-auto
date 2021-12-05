@@ -34,9 +34,8 @@ const { IncomingWebhook } = require("@slack/webhook");
     });
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36');
-    console.log('newPage OK')
     await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
-    await setTimeout(20000)//20秒
+    await setTimeout(Math.floor(Math.random() * 30000))//打刻時間をバラけさせる
     await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
     console.log('ページ遷移')
     await setTimeout(20000)
@@ -50,20 +49,23 @@ const { IncomingWebhook } = require("@slack/webhook");
     console.log('ログイン完了')
     await setTimeout(20000)
 
-    let buttonType = 'in'
-    let message = '出勤打刻'
+    let clickButtonType = 'in'
+    const date = new Date().getMonth + '月' + new Date().getDate + '日 '
+    let message = date + '出勤'
+    let slack_icon = 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png'
     //13時以降
     if (new Date().getHours() > 13) {
       console.log('退勤')
-      buttonType = 'out'
-      message = '退勤打刻'
+      clickButtonType = 'out'
+      message = date + '退勤'
+      slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
     }
     await setTimeout(20000)
     await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);//ダイアログ
     await setTimeout(20000)
-    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
+    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
     await setTimeout(20000)
-    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${buttonType}"]`);
+    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
     await setTimeout(20000)
     console.log('完了')
 
@@ -72,7 +74,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     webhook.send({
       text: "<!channel>\n" + message,
       username: "MF勤怠", //通知のユーザー名
-      icon_url: 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png',
+      icon_url: slack_icon,
     });
     await browser.close();
   }
@@ -92,5 +94,12 @@ const { IncomingWebhook } = require("@slack/webhook");
     }
   } catch (error) {
     console.log('The API returned an error: ' + error);
+    //Slack通知
+    const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
+    webhook.send({
+      text: "<!channel>\n打刻失敗！！！\n",
+      username: "MF勤怠", //通知のユーザー名
+      icon_url: 'https://thumb.ac-illust.com/90/90bae316d037441107ac7354f53f991c_t.jpeg',
+    });
   }
 })();
