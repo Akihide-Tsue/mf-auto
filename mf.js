@@ -53,8 +53,8 @@ const { IncomingWebhook } = require("@slack/webhook");
     const date = new Date().getMonth + '月' + new Date().getDate + '日 '
     let message = date + '出勤'
     let slack_icon = 'https://cdn.icon-icons.com/icons2/2642/PNG/512/google_calendar_logo_icon_159345.png'
-    //13時以降
-    if (new Date().getHours() > 13) {
+    //UTC am9時以降
+    if (new Date().getHours() > 9) {
       console.log('退勤')
       clickButtonType = 'out'
       message = date + '退勤'
