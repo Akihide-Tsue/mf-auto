@@ -73,7 +73,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     //Slack通知
     const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
     webhook.send({
-      text: "<!channel>\n" + message,
+      text: message,
       username: "MF勤怠", //通知のユーザー名
       icon_url: slack_icon,
     });
