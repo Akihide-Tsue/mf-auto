@@ -27,57 +27,67 @@ const { IncomingWebhook } = require("@slack/webhook");
 
   //MF打刻
   const mfPuppeteer = async () => {
-    const browser = await puppeteer.launch({
-      //  headless: false, //ブラウザ起動
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process']
-    });
-    const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36');
-    await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
-    await setTimeout(Math.floor(Math.random() * 600000))//打刻時間をバラけさせる
-    await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
-    console.log('ページ遷移')
-    await setTimeout(20000)
-    await page.type('input[name="mfid_user[email]"]', process.env.MF_ID);
-    await page.click('input[type="submit"]');
-    await setTimeout(20000)
-    console.log('パスワード画面')
-    await page.type('input[name="mfid_user[password]"]', process.env.MF_PASSWORD);
-    await setTimeout(20000)
-    await page.click('input[type="submit"]');
-    console.log('ログイン完了')
-    await setTimeout(20000)
+    try {
+      const browser = await puppeteer.launch({
+        // headless: false, //ブラウザ起動
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process']
+      });
+      const page = await browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36');
+      await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
+      await setTimeout(Math.floor(Math.random() * 600000))//打刻時間をバラけさせる
 
-    let clickButtonType = 'in'
-    const date = new Date().getMonth() + '月' + new Date().getDate() + '日 '
-    let message = date + '出勤'
-    let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
+      await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
+      console.log('ページ遷移')
+      await setTimeout(10000)
+      await page.type('input[name="mfid_user[email]"]', process.env.MF_ID);
+      await page.click('input[type="submit"]');
+      await setTimeout(10000)
+      console.log('パスワード画面')
+      await page.type('input[name="mfid_user[password]"]', process.env.MF_PASSWORD);
+      await setTimeout(10000)
+      await page.click('input[type="submit"]');
+      console.log('ログイン完了')
+      await setTimeout(10000)
 
-    //UTC am9時以降
-    if (new Date().getHours() > 9) {
-      console.log('退勤')
-      clickButtonType = 'out'
-      message = date + '退勤'
-      slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
+      let clickButtonType = 'in'
+      const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
+      console.log(date)
+      let message = date + '出勤'
+      let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
+
+      //HEROKU UTC am9時以降 = 日本18時以降
+      if (new Date().getHours() > 9) {
+        clickButtonType = 'out'
+        message = date + '退勤'
+        slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
+      }
+      // await setTimeout(10000)
+      // console.log('ダイアログ')
+      // await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);
+      await setTimeout(10000)
+      await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
+      console.log(message, '打刻完了')
+      await setTimeout(10000)
+      console.log('終了')
+
+      //Slack通知
+      // const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
+      // webhook.send({
+      // text: message,//'退勤'or'出勤'
+      //   username: "MF勤怠", //通知のユーザー名
+      //   icon_url: slack_icon,
+      // });
+      await browser.close();
+    } catch (error) {
+      //スクレイピング失敗時のslack通知
+      const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
+      webhook.send({
+        text: "<!channel>\n打刻失敗：\n" + error,
+        username: "MF勤怠",
+        icon_url: 'https://thumb.ac-illust.com/90/90bae316d037441107ac7354f53f991c_t.jpeg',
+      });
     }
-    await setTimeout(20000)
-    await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);//ダイアログ
-    await setTimeout(20000)
-    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
-    await setTimeout(20000)
-    await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
-    await setTimeout(20000)
-    console.log('完了')
-
-    //Slack通知
-    // const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
-    // webhook.send({
-    //   text: message,
-    //   username: "MF勤怠", //通知のユーザー名
-    //   icon_url: slack_icon,
-    // });
-    await browser.close();
   }
 
   try {
@@ -98,7 +108,7 @@ const { IncomingWebhook } = require("@slack/webhook");
     //Slack通知
     const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
     webhook.send({
-      text: "<!channel>\n打刻失敗！！！\n",
+      text: "<!channel>\n打刻失敗：\n" + error,
       username: "MF勤怠", //通知のユーザー名
       icon_url: 'https://thumb.ac-illust.com/90/90bae316d037441107ac7354f53f991c_t.jpeg',
     });
