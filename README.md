@@ -3,7 +3,8 @@
 ### コマンド
 node mf.js  
 heroku logs --tail -a mf-auto  
-utc12:30am = jtc9:30am
+utc12:30am = jtc9:30am  
+git push origin main  手動デプロイの場合
 
 ### 参考
 https://www.youtube.com/watch?v=dFaV95gS_0M  
