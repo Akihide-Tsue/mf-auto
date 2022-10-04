@@ -62,11 +62,10 @@ const { IncomingWebhook } = require("@slack/webhook");
         message = date + '退勤'
         slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
       }
-      // await setTimeout(10000)
-      // console.log('ダイアログ')
-      // await page.click(`button[class="_btn__2D6J_ __fit-width__2D6J_ _btn-hover-dark__2D6J_ karte-close"]`);
+
       await setTimeout(10000)
-      await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
+      await page.click(`div[class="button-list.mobile-button-cols-1"] > form.clock_${clickButtonType} > button`);
+      // await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
       console.log(message, '打刻完了')
       await setTimeout(10000)
       console.log('終了')
