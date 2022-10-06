@@ -35,7 +35,7 @@ const { IncomingWebhook } = require("@slack/webhook");
       const page = await browser.newPage();
       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36');
       await page.goto('https://attendance.moneyforward.com/employee_session/new', { waitUntil: ['load', 'networkidle2'] })
-      await setTimeout(Math.floor(Math.random() * 600000))//打刻時間をバラけさせる
+      // await setTimeout(Math.floor(Math.random() * 600000))//打刻時間をバラけさせる
 
       await page.click('a[class="attendance-button-mfid attendance-button-link attendance-button-size-wide"]');
       console.log('ページ遷移')
@@ -53,7 +53,7 @@ const { IncomingWebhook } = require("@slack/webhook");
       // let clickButtonType = 'in'
       // const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
       // console.log(date)
-      // let message = date + '出勤'
+      let message = date
       // let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
 
       // //HEROKU UTC am9時以降 = 日本18時以降
