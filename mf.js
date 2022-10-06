@@ -65,7 +65,6 @@ const { IncomingWebhook } = require("@slack/webhook");
 
       await setTimeout(10000)
       await page.click(`div[class="button-list.mobile-button-cols-1"] > form.clock_${clickButtonType} > button`);
-      // await page.click(`div[class="attendance-card-time-stamp-icon attendance-card-time-stamp-clock-${clickButtonType}"]`);
       console.log(message, '打刻完了')
       await setTimeout(10000)
       console.log('終了')
