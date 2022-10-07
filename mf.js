@@ -51,7 +51,7 @@ const { IncomingWebhook } = require("@slack/webhook");
       await setTimeout(10000)
 
       // let clickButtonType = 'in'
-      // const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
+      const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
       // console.log(date)
       let message = date
       // let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
