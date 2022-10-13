@@ -54,7 +54,7 @@ const { IncomingWebhook } = require("@slack/webhook");
       const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
       // console.log(date)
       let message = date
-      // let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
+      let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
 
       // //HEROKU UTC am9時以降 = 日本18時以降
       // if (new Date().getHours() > 9) {
