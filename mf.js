@@ -60,9 +60,10 @@ const { IncomingWebhook } = require("@slack/webhook");
       // if (new Date().getHours() > 9) {
       //   clickButtonType = 'out'
       //   message = date + '退勤'
-      //   slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
       // }
 
+      //slack_icon必要
+      slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
       await setTimeout(10000)
       await page.click(`button[class="time-stamp-button active mobile-button-rectangle"]`);
       console.log(message, '打刻完了')
