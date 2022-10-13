@@ -54,13 +54,15 @@ const { IncomingWebhook } = require("@slack/webhook");
       const date = new Date().getMonth() + '月' + new Date().getDate() + '日' + new Date().getHours() + '時 '
       // console.log(date)
       let message = date
-      // let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
+      let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
 
       // //HEROKU UTC am9時以降 = 日本18時以降
-      // if (new Date().getHours() > 9) {
-      //   clickButtonType = 'out'
-      //   message = date + '退勤'
-      // }
+      if (new Date().getHours() > 9) {
+        clickButtonType = 'out'
+        message = date + '退勤'
+        slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
+      }
+
 
       //slack_icon必要
       slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
@@ -71,12 +73,12 @@ const { IncomingWebhook } = require("@slack/webhook");
       console.log('終了')
 
       //Slack通知
-      // const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
-      // webhook.send({
-      // text: message,//'退勤'or'出勤'
-      //   username: "MF勤怠", //通知のユーザー名
-      //   icon_url: slack_icon,
-      // });
+      const webhook = new IncomingWebhook(process.env.SLACK_HOOK_URL);
+      webhook.send({
+      text: message,//'退勤'or'出勤'
+        username: "MF勤怠", //通知のユーザー名
+        icon_url: slack_icon,
+      });
       await browser.close();
     } catch (error) {
       //スクレイピング失敗時のslack通知
