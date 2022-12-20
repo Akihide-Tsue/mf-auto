@@ -58,14 +58,13 @@ const { IncomingWebhook } = require("@slack/webhook");
       // let slack_icon = 'https://icooon-mono.com/i/icon_12426/icon_124261_64.png'
       // slack_icon = 'https://static.vecteezy.com/system/resources/previews/000/512/293/large_2x/vector-close-glyph-black-icon.jpg'
 
-      // //HEROKU UTC am9時以降 = 日本18時以降
-      // if (new Date().getHours() > 9) {
-      //   clickButtonType = 'out'
-      //   message = date + '退勤'
-      // }
-
       await setTimeout(10000)
-      await page.click(`button[class="time-stamp-button active mobile-button-rectangle"]`);
+      //HEROKU UTC am9時以降 = 日本18時以降（退勤）
+      if (new Date().getHours() > 9) {
+        await page.click(`button[class="time-stamp-button active mobile-button-rectangle clock_out"]`);
+      } else {
+        await page.click(`button[class="time-stamp-button active mobile-button-rectangle clock_in"]`);
+      }
       console.log(message, '打刻完了')
       await setTimeout(10000)
       console.log('終了')
